@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>集氣小遊戲</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      margin: 0;
+      padding-top: 50px;
+    }
+    #emoji {
+      font-size: 50px;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+    #message {
+      font-size: 24px;
+      margin-top: 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: red;
+      animation: fall 1s ease-out forwards;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(300px) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="emoji">✨</div>
+  <div id="message">集氣成功！</div>
+
+  <script>
+    const emoji = document.getElementById("emoji");
+    const message = document.getElementById("message");
+    let clickCount = 0;
+    let scale = 1;
+    const maxClicks = 20;
+
+    emoji.addEventListener("click", () => {
+      if (clickCount >= maxClicks) return;
+      clickCount++;
+      scale += 0.05;
+      emoji.style.transform = `scale(${scale})`;
+
+      if (clickCount === maxClicks) {
+        triggerConfetti();
+        message.style.opacity = 1;
+
+        setTimeout(() => {
+          // Reset
+          clickCount = 0;
+          scale = 1;
+          emoji.style.transform = "scale(1)";
+          message.style.opacity = 0;
+        }, 15000);
+      }
+    });
+
+    function triggerConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.background = getRandomColor();
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.top = "-10px";
+        confetti.style.animationDuration = 0.7 + Math.random() * 0.5 + "s";
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 1000);
+      }
+    }
+
+    function getRandomColor() {
+      const colors = ["#ff6b6b", "#feca57", "#1dd1a1", "#54a0ff", "#5f27cd"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+
+</body>
+</html>
